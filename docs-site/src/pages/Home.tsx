@@ -317,10 +317,10 @@ function Features() {
 
 // ── Install ───────────────────────────────────────────────────────────────────
 const INSTALL: Record<string, string> = {
-  npm:  'npm install snapcss',
-  pnpm: 'pnpm add snapcss',
-  yarn: 'yarn add snapcss',
-  cdn:  '<script src="https://unpkg.com/snapcss"></script>',
+  npm:  'npm install @visshnnu-tejaa/snapcss',
+  pnpm: 'pnpm add @visshnnu-tejaa/snapcss',
+  yarn: 'yarn add @visshnnu-tejaa/snapcss',
+  cdn:  '<script src="https://unpkg.com/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>',
 }
 
 function Install() {

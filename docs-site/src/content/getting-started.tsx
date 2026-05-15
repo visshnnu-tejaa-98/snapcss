@@ -1,18 +1,23 @@
 import CodeBlock from '../components/CodeBlock'
 import ClassTable from '../components/ClassTable'
 
-const installNpm = `npm install snapcss`
+const installNpm = `npm install @visshnnu-tejaa/snapcss`
 
-const installCDN = `<!-- Via CDN (ESM) -->
+const installCDN = `<!-- Via CDN — auto-inits on DOMContentLoaded, no config needed -->
+
+<!-- unpkg -->
+<script src="https://unpkg.com/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>
+
+<!-- jsDelivr -->
+<script src="https://cdn.jsdelivr.net/npm/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>
+
+<!-- ESM (modern bundlers / import maps) -->
 <script type="module">
-  import { init } from 'https://cdn.jsdelivr.net/npm/snapcss/dist/index.mjs'
+  import { init } from 'https://cdn.jsdelivr.net/npm/@visshnnu-tejaa/snapcss/dist/index.mjs'
   init()
-</script>
+</script>`
 
-<!-- Via CDN (UMD, auto-init on DOMContentLoaded) -->
-<script src="https://cdn.jsdelivr.net/npm/snapcss/dist/index.js"></script>`
-
-const installImport = `import { init } from 'snapcss'
+const installImport = `import { init } from '@visshnnu-tejaa/snapcss'
 
 // Call init() once — typically in your app entry point
 init()
@@ -30,7 +35,7 @@ const quickHtml = `<!DOCTYPE html>
   <meta charset="UTF-8" />
   <title>My App</title>
   <!-- Step 1: Load snapcss (auto-inits on DOMContentLoaded) -->
-  <script src="https://cdn.jsdelivr.net/npm/snapcss/dist/index.js"></script>
+  <script src="https://unpkg.com/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>
 </head>
 <body>
 
@@ -138,9 +143,10 @@ export function Installation() {
       <ClassTable
         headers={['Export', 'Format', 'Use case']}
         rows={[
-          { cls: 'dist/index.js',   css: 'CJS (CommonJS)', note: 'Node.js / bundlers' },
-          { cls: 'dist/index.mjs',  css: 'ESM',            note: 'Modern bundlers, CDN import()' },
-          { cls: 'dist/index.d.ts', css: 'TypeScript types', note: 'Full type safety' },
+          { cls: 'dist/snapcss.min.js', css: 'IIFE (minified)',   note: 'CDN <script> tag, auto-inits' },
+          { cls: 'dist/index.mjs',      css: 'ESM',               note: 'Modern bundlers, CDN import()' },
+          { cls: 'dist/index.js',       css: 'CJS (CommonJS)',     note: 'Node.js / legacy bundlers' },
+          { cls: 'dist/index.d.ts',     css: 'TypeScript types',   note: 'Full type safety' },
         ]}
       />
     </div>
@@ -166,7 +172,7 @@ export function QuickStart() {
 
       <h2>With npm + bundler</h2>
       <CodeBlock
-        code={`import { init } from 'snapcss'
+        code={`import { init } from '@visshnnu-tejaa/snapcss'
 
 // In your app entry point (e.g. main.ts)
 init()

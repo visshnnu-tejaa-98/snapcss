@@ -1,4 +1,4 @@
-# snapcss
+# @visshnnu-tejaa/snapcss
 
 A lightweight utility-first runtime CSS engine. No build step required — works entirely in the browser, like TailwindCSS but at runtime.
 
@@ -20,19 +20,27 @@ A lightweight utility-first runtime CSS engine. No build step required — works
 ### npm
 
 ```bash
-npm install snapcss
+npm install @visshnnu-tejaa/snapcss
 ```
 
 ```js
-import { init } from 'snapcss';
+import { init } from "@visshnnu-tejaa/snapcss";
 init();
 ```
 
 ### CDN (browser)
 
+Drop one Script tag - no npm, no builder, no config needed. Auto initialization on `DOMContentLoaded`
+
 ```html
-<script src="https://unpkg.com/snapcss/dist/index.js"></script>
+<!-- unpkg -->
+<script src="https://unpkg.com/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>
+
+<!-- jsDelivr -->
+<script src="https://cdn.jsdelivr.net/npm/@visshnnu-tejaa/snapcss/dist/snapcss.min.js"></script>
 ```
+
+The global `window.SnapCSS` is also exposed if you need to call `SnapCSS.init()` manually
 
 The script auto-initialises on `DOMContentLoaded` — no extra code needed.
 
@@ -41,22 +49,20 @@ The script auto-initialises on `DOMContentLoaded` — no extra code needed.
 Add utility classes to any element:
 
 ```html
-<div class="snap p-8 bg-cyan-500 text-white rounded-xl hover:bg-violet-500">
+<div class="p-8 bg-cyan-500 text-white rounded-xl hover:bg-violet-500">
   Hello snapcss
 </div>
 ```
 
-All elements with the `snap` class are processed automatically.
-
 ## Custom Theme
 
 ```js
-import { init } from 'snapcss';
+import { init } from "@visshnnu-tejaa/snapcss";
 
 init({
   theme: {
     colors: {
-      brand: { 500: '#22d3ee' },
+      brand: { 500: "#22d3ee" },
     },
   },
 });
