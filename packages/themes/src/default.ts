@@ -1,23 +1,14 @@
 import {
-  borderRadiusScale,
-  borderWidthScale,
-  colors,
-  fontFamilies,
-  fontSizes,
-  fontWeights,
-  heightScale,
-  letterSpacings,
-  lineHeights,
-  maxWidthScale,
-  rotateValues,
-  scaleValues,
-  shadowScale,
-  sizingScale,
   spacingScale,
-  transitionDelayScale,
-  transitionDurationScale,
+  colors,
+  fontSizes, fontWeights, lineHeights, letterSpacings, fontFamilies,
   zIndexScale,
-} from "../../utilities/src";
+  borderWidthScale, borderRadiusScale,
+  shadowScale,
+  transitionDurationScale, transitionDelayScale,
+  scaleValues, rotateValues,
+  sizingScale, heightScale, maxWidthScale,
+} from "@snapcss/utilities";
 
 export interface SnapTheme {
   spacing?: Record<string, string>;
@@ -42,12 +33,12 @@ export interface SnapTheme {
 
 export const defaultTheme: SnapTheme = {
   spacing: spacingScale,
-  colors: colors,
-  fontSizes: fontSizes,
-  fontWeights: fontWeights,
-  lineHeights: lineHeights,
-  letterSpacings: letterSpacings,
-  fontFamilies: fontFamilies,
+  colors,
+  fontSizes,
+  fontWeights,
+  lineHeights,
+  letterSpacings,
+  fontFamilies,
   zIndex: zIndexScale,
   borderWidth: borderWidthScale,
   borderRadius: borderRadiusScale,

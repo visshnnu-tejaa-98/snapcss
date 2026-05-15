@@ -9,31 +9,18 @@ export function configure(overrides: { theme?: Partial<SnapTheme> }): void {
   activeTheme = {
     ...defaultTheme,
     ...t,
-    spacing:
-      t.spacing ?
-        { ...defaultTheme.spacing, ...t.spacing }
-      : defaultTheme.spacing,
-    colors:
-      t.colors ? { ...defaultTheme.colors, ...t.colors } : defaultTheme.colors,
-    fontSizes:
-      t.fontSizes ?
-        { ...defaultTheme.fontSizes, ...t.fontSizes }
-      : defaultTheme.fontSizes,
-    fontWeights:
-      t.fontWeights ?
-        { ...defaultTheme.fontWeights, ...t.fontWeights }
-      : defaultTheme.fontWeights,
-    shadows:
-      t.shadows ?
-        { ...defaultTheme.shadows, ...t.shadows }
-      : defaultTheme.shadows,
+    spacing: t.spacing ? { ...defaultTheme.spacing, ...t.spacing } : defaultTheme.spacing,
+    colors: t.colors ? { ...defaultTheme.colors, ...t.colors } : defaultTheme.colors,
+    fontSizes: t.fontSizes ? { ...defaultTheme.fontSizes, ...t.fontSizes } : defaultTheme.fontSizes,
+    fontWeights: t.fontWeights ? { ...defaultTheme.fontWeights, ...t.fontWeights } : defaultTheme.fontWeights,
+    shadows: t.shadows ? { ...defaultTheme.shadows, ...t.shadows } : defaultTheme.shadows,
   };
 }
 
-export const getTheme = (): SnapTheme => {
+export function getTheme(): SnapTheme {
   return activeTheme;
-};
+}
 
-export const resetTheme = (): void => {
-  activeTheme = defaultTheme;
-};
+export function resetTheme(): void {
+  activeTheme = { ...defaultTheme };
+}

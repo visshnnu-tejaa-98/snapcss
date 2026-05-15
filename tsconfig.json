@@ -13,8 +13,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "ignoreDeprecations": "6.0"
+    "resolveJsonModule": true
   },
   "include": ["packages/**/*.ts"],
   "exclude": ["node_modules", "dist", "playground"]

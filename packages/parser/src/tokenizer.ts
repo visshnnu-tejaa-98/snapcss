@@ -1,18 +1,17 @@
 /**
- * Strips the "snap-" prefix and splits the rest into tokens.
+ * Splits a class string into tokens on "-" delimiters.
  * Treats [...] bracket groups as a single unbreakable token.
  *
  * Examples:
- *   "snap-p-4"              → ["p", "4"]
- *   "snap-pt-[150px]"       → ["pt", "[150px]"]
- *   "snap-bg-red-500"       → ["bg", "red", "500"]
- *   "snap-border-t-[3px]"   → ["border", "t", "[3px]"]
- *   "snap-rounded-tl-lg"    → ["rounded", "tl", "lg"]
- *   "snap-grid-cols-[1fr_2fr]" → ["grid", "cols", "[1fr_2fr]"]
+ *   "p-4"              → ["p", "4"]
+ *   "pt-[150px]"       → ["pt", "[150px]"]
+ *   "bg-red-500"       → ["bg", "red", "500"]
+ *   "border-t-[3px]"   → ["border", "t", "[3px]"]
+ *   "rounded-tl-lg"    → ["rounded", "tl", "lg"]
+ *   "grid-cols-[1fr_2fr]" → ["grid", "cols", "[1fr_2fr]"]
  */
-
-export const tokenize = (cls: string) => {
-  const withoutPrefix = cls.replace(/^snap-/, "");
+export function tokenize(cls: string): string[] {
+  const withoutPrefix = cls;
   const tokens: string[] = [];
   let current = "";
   let inBracket = false;
@@ -31,6 +30,7 @@ export const tokenize = (cls: string) => {
       current += char;
     }
   }
+
   if (current) tokens.push(current);
   return tokens;
-};
+}

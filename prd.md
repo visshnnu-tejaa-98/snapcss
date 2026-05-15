@@ -1,14 +1,14 @@
 # Overview
 
-snap is a lightweight utility-first runtime CSS engine built in JavaScript.
+**snapcss** is a lightweight, utility-first runtime CSS engine built in TypeScript.
 
-Instead of writing CSS manually, developers use utility classes like:
+Instead of writing CSS manually, developers use utility classes directly — no prefix required:
 
 ```html
-<div class="snap-p-4 snap-bg-red-500 snap-text-center"></div>
+<div class="p-4 bg-red-500 text-center flex items-center justify-center"></div>
 ```
 
-The engine scans the DOM, parses utility classes, converts them into style objects, and applies inline styles dynamically.
+The engine scans the DOM, parses utility classes, converts them into style objects, and applies inline styles dynamically. No build step, no PostCSS, no configuration file required.
 
 ---
 
@@ -18,12 +18,15 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 
 ### Core Runtime Engine
 
-- Parse utility classes
-- Apply styles dynamically
-- Support responsive modifiers
-- Support pseudo states
-- Support dark mode
-- Support themes
+- Parse utility classes with no prefix
+- Apply styles dynamically as inline styles
+- Support responsive modifiers (sm: md: lg: xl: 2xl:)
+- Support pseudo states (hover: focus: active: focus-visible:)
+- Support dark mode (dark:)
+- Support structural modifiers (disabled: first: last: odd: even:)
+- Support group-hover via `.group` ancestor class
+- Support arbitrary values via bracket notation (e.g. `p-[150px]`, `bg-[#ff5733]`)
+- Support theme customization
 - Zero CSS files required
 
 ---
@@ -57,6 +60,7 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 - position
 - z-index
 - overflow
+- visibility
 
 **Flexbox**
 
@@ -64,56 +68,98 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 - justify
 - align
 - gap
+- flex-wrap / flex-grow / flex-shrink
 
 **Grid**
 
 - grid-cols
 - grid-rows
-- col-span
+- col-span / row-span
+- gap
 
 **Spacing**
 
-- padding
-- margin
+- padding (p, pt, pb, pl, pr, px, py)
+- margin (m, mt, mb, ml, mr, mx, my, auto)
+- space-between (space-x, space-y)
 
 **Sizing**
 
-- width
-- height
+- width (w, min-w, max-w)
+- height (h, min-h, max-h)
+- inset (top, right, bottom, left, inset, inset-x, inset-y)
 
 **Typography**
 
-- font-size
-- font-weight
-- line-height
-- text-align
-- color
+- font-size (text-xs … text-9xl)
+- font-weight (font-thin … font-black)
+- line-height (leading-\*)
+- letter-spacing (tracking-\*)
+- text-align, text-transform, text-decoration
+- font-family (font-sans, font-serif, font-mono)
+- text-overflow / white-space / line-clamp
 
 **Borders**
 
-- border
-- radius
+- border width (border, border-t, border-b, border-l, border-r, border-x, border-y)
+- border radius (rounded, rounded-t, rounded-full, etc.)
+- border style (solid, dashed, dotted, double, none)
+- border color
+- outline
 
 **Backgrounds**
 
-- bg-color
+- bg-color (full color palette)
+- bg-size (cover, contain)
+- bg-position (center, top, bottom, left, right)
+- bg-repeat (repeat, no-repeat, repeat-x, repeat-y, round, space)
+- bg-attachment (fixed, local, scroll)
+
+**Effects**
+
+- box-shadow
+- opacity
+- transitions (transition, duration, ease, delay)
+- transforms (scale, rotate, translate-x, translate-y, skew-x, skew-y)
+
+**Interactivity**
+
+- cursor
+- pointer-events
+- user-select
+- aspect-ratio
+- object-fit / object-position
 
 **States**
 
 - hover:
 - focus:
 - active:
+- focus-visible:
 
 **Responsive**
 
-- sm:
-- md:
-- lg:
-- xl:
+- sm: (≥ 640px)
+- md: (≥ 768px)
+- lg: (≥ 1024px)
+- xl: (≥ 1280px)
+- 2xl: (≥ 1536px)
 
 **Dark Mode**
 
 - dark:
+
+**Structural**
+
+- disabled:
+- first:
+- last:
+- odd:
+- even:
+
+**Group**
+
+- group-hover: (requires `.group` on ancestor)
 
 ---
 
@@ -122,8 +168,9 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 ## Performance
 
 - Initial scan under 50ms for 1000 nodes
-- Efficient caching
-- Avoid duplicate parsing
+- Parse cache: `Map<string, CSSProperties>` — identical classes never parsed twice
+- MutationObserver for dynamically added nodes
+- Debounced re-scan on DOM mutations
 
 ## Compatibility
 
@@ -131,7 +178,7 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 - React
 - Vue
 - Angular
-- SSR-safe architecture later
+- SSR-safe architecture (browser-only, graceful skip in Node.js)
 
 ---
 
@@ -140,7 +187,7 @@ The engine scans the DOM, parses utility classes, converts them into style objec
 Runtime Utility Engine
 
 ```
-DOM → Scanner → Parser → Style Generator → Inline Style Applier
+DOM → Scanner → Parser → Resolver → Cache → Style Applier
 ```
 
 ---
@@ -152,17 +199,15 @@ DOM → Scanner → Parser → Style Generator → Inline Style Applier
 ```
 User HTML
    ↓
-DOM Scanner
+DOM Scanner          querySelectorAll("*"), collect all class names
    ↓
-Class Extractor
+Parser Engine        tokenize class string → { modifier, utility, value, isArbitrary }
    ↓
-Parser Engine
+Utility Resolver     map tokens → CSS property/value pairs
    ↓
-Utility Resolver
+Style Cache          Map<string, CSSProperties> — skip re-parsing identical classes
    ↓
-Style Object Generator
-   ↓
-Inline Style Application
+Inline Style Applier Object.assign(el.style, styles)
 ```
 
 ---
@@ -171,12 +216,9 @@ Inline Style Application
 
 ## Backend / Tooling
 
-### Use Express.js For
+### Express.js Used For
 
-- Playground server
-- Dev server
-- Package testing
-- Documentation server
+- Playground dev server
 - Live preview sandbox
 
 NOT for styling logic.
@@ -185,16 +227,17 @@ NOT for styling logic.
 
 # Main Stack
 
-| Purpose          | Tech          |
-| ---------------- | ------------- |
-| Runtime engine   | Vanilla JS    |
-| Package bundling | Rollup / tsup |
-| Dev server       | Express.js    |
-| Language         | TypeScript    |
-| Playground       | Vite          |
-| Docs             | Docusaurus    |
-| Linting          | ESLint        |
-| Formatting       | Prettier      |
+| Purpose          | Tech           |
+| ---------------- | -------------- |
+| Runtime engine   | TypeScript     |
+| Package bundling | tsup           |
+| Dev server       | Express.js     |
+| Language         | TypeScript     |
+| Docs site        | Vite + React   |
+| Playground       | Vite           |
+| Linting          | ESLint         |
+| Formatting       | Prettier       |
+| Monorepo         | npm workspaces |
 
 ---
 
@@ -204,475 +247,247 @@ NOT for styling logic.
 snapcss/
 │
 ├── packages/
-│   ├── core/
-│   ├── parser/
-│   ├── utilities/
-│   ├── themes/
-│   ├── presets/
-│   └── cli/
+│   ├── core/          ← init(), scanner, applier, group, MutationObserver
+│   ├── parser/        ← tokenizer, modifier extractor, parseClass()
+│   ├── utilities/     ← spacing, typography, colors, borders, effects, …
+│   └── themes/        ← default theme, color palette, spacing scale
 │
-├── playground/
+├── docs-site/         ← Vite + React documentation app
 │
-├── docs/
+├── playground/        ← Express.js + live HTML sandbox
 │
-├── examples/
-│
-├── tests/
-│
-├── scripts/
+├── tests/             ← unit + integration tests
 │
 ├── package.json
 ├── tsconfig.json
-├── turbo.json
 └── README.md
 ```
 
 ---
 
-# 5. STEP-BY-STEP DEVELOPMENT ROADMAP
+# 5. CLASS SYNTAX
 
-# PHASE 1 — PROJECT SETUP
-
-## Step 1 — Initialize Project
+## Format
 
 ```
-mkdir snapcss
-cd snapcss
-npm init-y
+[modifier:]utility[-value]
 ```
+
+- **modifier** — optional prefix ending with `:` (e.g. `hover:`, `md:`, `dark:`)
+- **utility** — the CSS property group (e.g. `p`, `bg`, `text`, `flex`)
+- **value** — a scale token (e.g. `4`, `red-500`, `xl`) or arbitrary value in `[…]`
+
+## Examples
+
+| Class                 | CSS output                                    |
+| --------------------- | --------------------------------------------- |
+| `p-4`                 | `padding: 16px`                               |
+| `m-2`                 | `margin: 4px`                                 |
+| `bg-red-500`          | `background-color: #ef4444`                   |
+| `text-xl`             | `font-size: 20px`                             |
+| `flex`                | `display: flex`                               |
+| `items-center`        | `align-items: center`                         |
+| `hover:bg-blue-500`   | `background-color: #3b82f6` (on hover)        |
+| `md:p-8`              | `padding: 32px` (when ≥ 768px)                |
+| `dark:bg-gray-900`    | `background-color: #111827` (dark mode)       |
+| `p-[150px]`           | `padding: 150px` (arbitrary value)            |
+| `bg-[#ff5733]`        | `background-color: #ff5733` (arbitrary color) |
+| `grid-cols-[1fr_2fr]` | `grid-template-columns: 1fr 2fr`              |
 
 ---
 
-## Step 2 — Install Dependencies
+# 6. PARSING STRATEGY
+
+## Pipeline
 
 ```
-npm install typescript tsup express eslint prettier-D
+class string
+   ↓
+extractModifier()   → { modifier, rest }
+   ↓
+tokenize(rest)      → string[]
+   ↓
+resolve(tokens)     → CSSProperties
+   ↓
+cache.set(cls, styles)
 ```
 
----
+## Tokenizer
 
-## Step 3 — Setup TypeScript
+Input: `"px-[24px]"`
+Tokens: `["px", "[24px]"]`
 
+Detects `[` to mark arbitrary value. Underscore inside `[…]` → space.
+
+## Parser examples
+
+```ts
+parseClass("pt-2");
+// → { modifier: null, utility: "pt", value: "2", isArbitrary: false }
+
+parseClass("pt-[150px]");
+// → { modifier: null, utility: "pt", value: "150px", isArbitrary: true }
+
+parseClass("hover:bg-red-500");
+// → { modifier: { type: "state", state: "hover" }, utility: "bg", value: "red-500", isArbitrary: false }
+
+parseClass("md:p-4");
+// → { modifier: { type: "responsive", breakpoint: "md" }, utility: "p", value: "4", isArbitrary: false }
 ```
-npx tsc--init
-```
-
----
-
-## Step 4 — Create Core Structure
-
-```
-mkdir src
-mkdir playground
-mkdir tests
-```
-
----
-
-# PHASE 2 — BUILD THE ENGINE
-
-# Step 5 — Create Utility Config
-
-## spacing.ts
-
-```jsx
-export const spacingScale = {
-  1: "2px",
-  2: "4px",
-  3: "8px",
-  4: "16px",
-  5: "32px",
-};
-```
-
----
-
-## typography.ts
-
-```jsx
-export const fontSizes = {
-  xs: "12px",
-  md: "16px",
-  lg: "20px",
-  xl: "24px",
-  xxl: "32px",
-  xxxl: "48px",
-};
-```
-
----
-
-## colors.ts
-
-```jsx
-export const colors = {
-  red: {
-    100: "#fee2e2",
-    500: "#ef4444",
-    900: "#7f1d1d",
-  },
-};
-```
-
----
-
-# Step 6 — Create DOM Scanner
-
-## scanner.ts
-
-```jsx
-export function scanDOM() {
-  return document.querySelectorAll("*");
-}
-```
-
----
-
-# Step 7 — Extract snap-\* Classes
-
-```jsx
-export function extractClasses(el:Element) {
-	return [...el.classList].filter((c) =>
-		c.startsWith("snap-")
-  );
-}
-```
-
----
-
-# Step 8 — Create Parser Engine
-
-## Example
-
-```jsx
-chai - p - 4;
-```
-
-Becomes:
-
-```jsx
-{
-	utility:"p",
-	value:"4"
-}
-```
-
----
-
-## parser.ts
-
-```jsx
-export function parseClass(cls:string) {
-	const clean = cls.replace("chai-","");
-	const parts = clean.split("-");
-
-	return {
-    utility: parts[0],
-    value: parts[1],
-  };
-}
-```
-
----
-
-# Step 9 — Build Utility Resolver
-
-## resolver.ts
-
-```jsx
-export function resolveUtility(parsed) {
-  switch (parsed.utility) {
-    case "p":
-      return {
-        padding: spacingScale[parsed.value],
-      };
-
-    case "bg":
-      return {
-        backgroundColor: parsed.value,
-      };
-
-    default:
-      return {};
-  }
-}
-```
-
----
-
-# Step 10 — Apply Styles
-
-## applier.ts
-
-```jsx
-export functionapplyStyles(el,styles) {
-	Object.assign(el.style,styles);
-}
-```
-
----
-
-# Step 11 — Main Runtime
-
-## index.ts
-
-```jsx
-functioninit() {
-	const elements = scanDOM();
-
-	elements.forEach((el) => {
-	const classes = extractClasses(el);
-
-	classes.forEach((cls) => {
-	const parsed=parseClass(cls);
-	const styles=resolveUtility(parsed);
-
-	applyStyles(el,styles);
-    });
-  });
-}
-
-document.addEventListener("DOMContentLoaded",init);
-```
-
----
-
-# PHASE 3 — ADD UTILITIES
-
-# Priority Order
-
-## Tier 1
-
-- spacing
-- colors
-- typography
-- flex
-- width/height
-
----
-
-## Tier 2
-
-- grid
-- border
-- positioning
-- overflow
-
----
-
-## Tier 3
-
-- animation
-- transform
-- filters
-
----
-
-# 6. CLASS PARSING STRATEGY
-
-# Example Utility Map
-
-| Class             | CSS                |
-| ----------------- | ------------------ |
-| chai-p-4          | padding:16px       |
-| chai-m-2          | margin:4px         |
-| chai-bg-red-500   | background-color   |
-| chai-text-xl      | font-size          |
-| chai-flex         | display:flex       |
-| chai-items-center | align-items:center |
-
----
-
-# Parser Design
-
-Use tokenized parsing.
-
-## Example
-
-```jsx
-chai - bg - red - 500;
-```
-
-Tokens:
-
-```jsx
-["bg", "red", "500"];
-```
-
-Then resolve via maps.
 
 ---
 
 # 7. RESPONSIVE SYSTEM
 
-# Example
+Classes are re-evaluated on `resize`:
 
-```html
-<div class="snap-md:p-4"></div>
-```
-
-Parser:
-
-```jsx
-{
-	breakpoint:"md",
-	utility:"p",
-	value:"4"
-}
+```ts
+window.addEventListener("resize", () => applyResponsiveClasses());
 ```
 
 Breakpoints:
 
-```jsx
+```ts
 const breakpoints = {
   sm: 640,
   md: 768,
   lg: 1024,
   xl: 1280,
+  "2xl": 1536,
 };
 ```
 
-Use:
-
-```jsx
-window.innerWidth;
-```
+Modifier check: `window.innerWidth >= breakpoints[breakpoint]`
 
 ---
 
-# 8. HOVER / FOCUS STATES
+# 8. HOVER / FOCUS / ACTIVE STATES
 
-# Example
+Event listeners attached per element:
 
-```jsx
-<buttonclass="snap-hover:bg-red-500"></button>
-```
-
-Implementation:
-
-```jsx
-el.addEventListener("mouseenter", ...)
-el.addEventListener("mouseleave", ...)
+```ts
+el.addEventListener("mouseenter", () => applyStyles(el, hoverStyles));
+el.addEventListener("mouseleave", () => removeStyles(el, hoverStyleKeys));
+el.addEventListener("focus", () => applyStyles(el, focusStyles));
+el.addEventListener("blur", () => removeStyles(el, focusStyleKeys));
 ```
 
 ---
 
 # 9. DARK MODE
 
-# Example
+Detected via:
 
-```html
-<div class="chai-dark:bg-black"></div>
-```
-
-Detect:
-
-```jsx
+```ts
 window.matchMedia("(prefers-color-scheme: dark)");
 ```
 
+Re-evaluated on `change` event. `dark:` classes apply when the media query matches.
+
 ---
 
-# 10. THEME SYSTEM
+# 10. GROUP HOVER
 
-# themes/default.ts
+Requires `.group` class on an ancestor element:
 
-```jsx
+```html
+<div class="group p-4">
+  <span class="group-hover:text-white">Reveals on parent hover</span>
+</div>
+```
+
+Implementation: registers children in a `groupRegistry` Map, attaches `mouseenter`/`mouseleave` listeners on the `.group` root.
+
+---
+
+# 11. THEME SYSTEM
+
+Default theme defined in `packages/themes/src/`:
+
+```ts
 export const theme = {
-  colors,
-  spacing,
-  typography,
+  colors, // full 22-family palette
+  spacing, // scale 0.5 → 96
+  fontSize, // xs → 9xl
+  // …
 };
 ```
 
-Allow user override:
+User override via `init()`:
 
-```jsx
-chaiTailwind.configure({
-  theme: {},
+```ts
+import { init } from "snapcss";
+
+init({
+  theme: {
+    colors: {
+      brand: { 500: "#7c6cf2", 600: "#6d5ce0" },
+    },
+  },
 });
 ```
 
+Deep-merged with defaults — only overridden keys change.
+
 ---
 
-# 11. PERFORMANCE OPTIMIZATION
-
-# Important
-
-Inline styles are expensive.
-
-You need:
+# 12. PERFORMANCE OPTIMIZATION
 
 ## Style Cache
 
-```jsx
-Map<string,CSSStyleDeclaration>
+```ts
+const styleCache = new Map<string, CSSProperties>();
 ```
 
----
+Full class string is the cache key (e.g. `"pt-[150px]"`, `"rounded-tl-lg"`).
+Identical classes across elements are resolved once.
 
-## Mutation Observer
+## MutationObserver
 
-For dynamically added nodes.
+Watches for new nodes / class attribute changes:
 
-```jsx
-newMutationObserver(...)
+```ts
+new MutationObserver((mutations) => {
+  // collect added nodes, re-scan
+}).observe(document.body, { childList: true, subtree: true, attributes: true });
 ```
 
----
+## Scanner
 
-## Avoid Re-parsing
-
-Cache parsed utilities.
+Collects all class names from every element. Unknown utilities return `{}` from the resolver and are silently ignored — no opt-in mechanism required.
 
 ---
 
-# 12. EXPRESS.JS USAGE
-
-# Express Dev Playground
+# 13. EXPRESS.JS PLAYGROUND
 
 ## server.js
 
-```jsx
-const express = require("express");
+```ts
+import express from "express";
 const app = express();
-
 app.use(express.static("playground"));
-
 app.listen(3000);
 ```
 
----
-
-# Playground Structure
+## Playground Structure
 
 ```
 playground/
 ├── index.html
 ├── app.js
-└── chai-tailwind.js
+└── snapcss.js   ← local build output
 ```
 
 ---
 
-# 13. PACKAGE BUILDING
-
-# Use tsup
-
-Install:
-
-```bash
-npm install tsup-D
-```
-
----
+# 14. PACKAGE BUILDING
 
 ## tsup.config.ts
 
-```tsx
+```ts
 import { defineConfig } from "tsup";
 
-exportdefaultdefineConfig({
+export default defineConfig({
   entry: ["src/index.ts"],
   format: ["esm", "cjs"],
   dts: true,
@@ -680,141 +495,111 @@ exportdefaultdefineConfig({
 });
 ```
 
----
-
-# Build
-
-```bash
-npm run build
-```
+Build: `npm run build`
 
 ---
 
-# 14. NPM PACKAGE SETUP
+# 15. NPM PACKAGE
 
-# package.json
+## package.json
 
-```jsx
+```json
 {
-  "name":"chai-tailwind",
-  "version":"1.0.0",
-  "main":"./dist/index.js",
-  "types":"./dist/index.d.ts"
+  "name": "snapcss",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
 }
 ```
 
 ---
 
-# 15. DEPLOYMENT FLOW
-
-# Step-by-Step
-
-## Login
+# 16. DEPLOYMENT FLOW
 
 ```bash
 npm login
+npm publish --access public
 ```
 
 ---
 
-## Publish
+# 17. VERSIONING STRATEGY
 
-```bash
-npm publish--access public
+Semantic versioning:
+
+| Type  | Example | When                        |
+| ----- | ------- | --------------------------- |
+| Patch | 1.0.1   | Bug fixes                   |
+| Minor | 1.1.0   | New utilities, non-breaking |
+| Major | 2.0.0   | Breaking API changes        |
+
+---
+
+# 18. FUTURE ROADMAP
+
+## V2 Features
+
+### Build-Time Compiler
+
+Like Tailwind JIT — scan HTML/JSX at build time, emit a static CSS file. Much faster than runtime parsing.
+
+### Babel / Vite Plugin
+
+Compile utilities at build time inside existing toolchains.
+
+### React / Vue Integrations
+
+```tsx
+<SnapProvider theme={customTheme}>
+  <App />
+</SnapProvider>
 ```
 
----
+### CSS Variables Engine
 
-# 16. VERSIONING STRATEGY
-
-Use semantic versioning.
-
-| Type  | Example |
-| ----- | ------- |
-| Patch | 1.0.1   |
-| Minor | 1.1.0   |
-| Major | 2.0.0   |
+Dynamic theming via CSS custom properties instead of inline styles.
 
 ---
 
-# 17. FUTURE ROADMAP
-
-# V2 Features
-
-## Build-Time Compiler
-
-Like Tailwind JIT.
-
-Instead of runtime parsing:
-
-```
-HTML → CSS generation
-```
-
-Much faster.
-
----
-
-## Babel Plugin
-
-Compile utilities at build time.
-
----
-
-## React/Vue Integrations
-
-```html
-<ChaiProvider />
-```
-
----
-
-## CSS Variables Engine
-
-Dynamic themes.
-
----
-
-# 18. RECOMMENDED IMPLEMENTATION ORDER
-
-# Week-by-Week Plan
+# 19. IMPLEMENTATION ORDER
 
 ## Week 1
 
-- setup
-- parser
-- spacing
-- colors
-
----
+- monorepo setup
+- parser (tokenizer, modifier extractor)
+- spacing + colors utilities
 
 ## Week 2
 
-- typography
-- flex
-- grid
-- positioning
-
----
+- typography, flex, grid, positioning utilities
+- theme system
 
 ## Week 3
 
-- responsive
-- hover/focus
+- responsive modifier
+- hover / focus / active states
 - dark mode
-
----
 
 ## Week 4
 
-- optimization
-- caching
-- mutation observer
-
----
+- performance optimization (cache, MutationObserver)
+- arbitrary values
 
 ## Week 5
 
+- group-hover, disabled, first/last/odd/even modifiers
 - testing
-- docs
+
+## Week 6
+
+- docs site (Vite + React)
+- playground
 - npm publishing

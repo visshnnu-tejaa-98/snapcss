@@ -1,7 +1,7 @@
 export type ColorShades = Record<string, string>;
-export type ColorPallete = Record<string, ColorShades | string>;
+export type ColorPalette = Record<string, ColorShades | string>;
 
-export const colors: ColorPallete = {
+export const colors: ColorPalette = {
   inherit: "inherit",
   current: "currentColor",
   transparent: "transparent",
@@ -46,6 +46,7 @@ export const colors: ColorPallete = {
     "800": "#27272a",
     "900": "#18181b",
     "950": "#09090b",
+
   },
 
   neutral: {
@@ -60,6 +61,7 @@ export const colors: ColorPallete = {
     "800": "#262626",
     "900": "#171717",
     "950": "#0a0a0a",
+
   },
 
   stone: {
@@ -74,6 +76,7 @@ export const colors: ColorPallete = {
     "800": "#292524",
     "900": "#1c1917",
     "950": "#0c0a09",
+
   },
 
   red: {
@@ -88,6 +91,7 @@ export const colors: ColorPallete = {
     "800": "#991b1b",
     "900": "#7f1d1d",
     "950": "#450a0a",
+
   },
 
   orange: {
@@ -102,6 +106,7 @@ export const colors: ColorPallete = {
     "800": "#9a3412",
     "900": "#7c2d12",
     "950": "#431407",
+
   },
 
   amber: {
@@ -116,6 +121,7 @@ export const colors: ColorPallete = {
     "800": "#92400e",
     "900": "#78350f",
     "950": "#451a03",
+
   },
 
   yellow: {
@@ -130,6 +136,7 @@ export const colors: ColorPallete = {
     "800": "#854d0e",
     "900": "#713f12",
     "950": "#422006",
+
   },
 
   lime: {
@@ -144,6 +151,7 @@ export const colors: ColorPallete = {
     "800": "#3f6212",
     "900": "#365314",
     "950": "#1a2e05",
+
   },
 
   green: {
@@ -158,6 +166,7 @@ export const colors: ColorPallete = {
     "800": "#166534",
     "900": "#14532d",
     "950": "#052e16",
+
   },
 
   emerald: {
@@ -172,6 +181,7 @@ export const colors: ColorPallete = {
     "800": "#065f46",
     "900": "#064e3b",
     "950": "#022c22",
+
   },
 
   teal: {
@@ -186,6 +196,7 @@ export const colors: ColorPallete = {
     "800": "#115e59",
     "900": "#134e4a",
     "950": "#042f2e",
+
   },
 
   cyan: {
@@ -200,6 +211,7 @@ export const colors: ColorPallete = {
     "800": "#155e75",
     "900": "#164e63",
     "950": "#083344",
+
   },
 
   sky: {
@@ -214,6 +226,7 @@ export const colors: ColorPallete = {
     "800": "#075985",
     "900": "#0c4a6e",
     "950": "#082f49",
+
   },
 
   blue: {
@@ -228,6 +241,7 @@ export const colors: ColorPallete = {
     "800": "#1e40af",
     "900": "#1e3a8a",
     "950": "#172554",
+
   },
 
   indigo: {
@@ -242,6 +256,7 @@ export const colors: ColorPallete = {
     "800": "#3730a3",
     "900": "#312e81",
     "950": "#1e1b4b",
+
   },
 
   violet: {
@@ -256,6 +271,7 @@ export const colors: ColorPallete = {
     "800": "#5b21b6",
     "900": "#4c1d95",
     "950": "#2e1065",
+
   },
 
   purple: {
@@ -270,6 +286,7 @@ export const colors: ColorPallete = {
     "800": "#6b21a8",
     "900": "#581c87",
     "950": "#3b0764",
+
   },
 
   fuchsia: {
@@ -284,6 +301,7 @@ export const colors: ColorPallete = {
     "800": "#86198f",
     "900": "#701a75",
     "950": "#4a044e",
+
   },
 
   pink: {
@@ -298,6 +316,7 @@ export const colors: ColorPallete = {
     "800": "#9d174d",
     "900": "#831843",
     "950": "#500724",
+
   },
 
   rose: {
@@ -312,26 +331,27 @@ export const colors: ColorPallete = {
     "800": "#9f1239",
     "900": "#881337",
     "950": "#4c0519",
+
   },
+
 };
 
-export const resolveColor = (value: string): string | undefined => {
-  if (value === "black") return "#000";
-  if (value === "white") return "#fff";
+export function resolveColor(value: string): string | undefined {
+  if (value === "black") return "#000000";
+  if (value === "white") return "#ffffff";
   if (value === "transparent") return "transparent";
   if (value === "current") return "currentColor";
   if (value === "inherit") return "inherit";
 
-  const parts = value.split("-"); //[snap, bg, red, 500]
-
+  const parts = value.split("-");
   if (parts.length < 2) return undefined;
 
   const shade = parts[parts.length - 1];
   const colorName = parts.slice(0, -1).join("-");
   const colorGroup = colors[colorName];
 
-  if (colorGroup && typeof colorGroup === "object") return colorGroup[shade];
+  if (colorGroup && typeof colorGroup === "object") {
+    return (colorGroup as ColorShades)[shade];
+  }
   return undefined;
-};
-
-// resolveColor("red-500");
+}

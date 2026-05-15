@@ -1,4 +1,12 @@
-node_modules
-dist
-playground
+node_modules/
+dist/
+docs-site/dist/
+docs-site/public/snap-core.js
+docs-site/public/snap-core.js.map
+*.tsbuildinfo
 .env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db

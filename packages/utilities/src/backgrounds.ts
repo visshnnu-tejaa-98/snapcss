@@ -1,19 +1,19 @@
 export const bgSizeValues: Record<string, string> = {
   auto: "auto",
   cover: "cover",
-  cobtain: "container",
+  contain: "contain",
 };
 
 export const bgPositionValues: Record<string, string> = {
+  bottom: "bottom",
   center: "center",
   left: "left",
-  right: "right",
-  top: "top",
-  bottom: "bottom",
   "left-bottom": "left bottom",
-  "right-bottom": "right-bottom",
   "left-top": "left top",
+  right: "right",
+  "right-bottom": "right bottom",
   "right-top": "right top",
+  top: "top",
 };
 
 export const bgRepeatValues: Record<string, string> = {

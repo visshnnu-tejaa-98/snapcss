@@ -1,13 +1,33 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
-  entry: ["packages/core/src/index.ts"], // Entry point
-  format: ["esm", "cjs"], // Allowed formats are express module and common js module
-  dts: true, // To include type definations in d.ts files
-  minify: true, // To minify the output bundle
-  sourcemap: true, // Helps in debug - without source map, occured errors points to minified js file, with this true, the errors points to original ts file
-  clean: true, // Delets previous dist folter after every build
-  outDir: "dist", // Out directory
-  treeshake: true, // Removes unused code in bundle
-  target: "es2020", // Generates JS compatible with ES2020
-});
+export default defineConfig([
+  // ── npm package (ESM + CJS, minified) ────────────────────────────────────
+  {
+    entry: ["packages/core/src/index.ts"],
+    format: ["esm", "cjs"],
+    dts: true,
+    minify: true,
+    sourcemap: true,
+    clean: true,
+    outDir: "dist",
+    treeshake: true,
+    target: "es2020",
+  },
+
+  // ── browser debug build (IIFE, unminified) ────────────────────────────────
+  // Loaded by docs-site so console.log / debugger statements in the TS source
+  // are visible in the browser DevTools console.
+  {
+    entry: { "snap-core": "packages/core/src/index.ts" },
+    format: ["iife"],
+    globalName: "SnapCore",
+    minify: false,
+    sourcemap: true,
+    outDir: "docs-site/public",
+    outExtension: () => ({ js: ".js" }),
+    target: "es2020",
+    define: {
+      "process.env.NODE_ENV": '"development"',
+    },
+  },
+]);

@@ -1797,7 +1797,7 @@ var SnapCore = (() => {
       );
     }
   }
-  function applySpaceBetween(el, marker, value, prop) {
+  function applySpaceBetween(el, _marker, value, prop) {
     const children = Array.from(el.children);
     children.forEach((child, i) => {
       child.style[prop] = i === 0 ? "" : value;
