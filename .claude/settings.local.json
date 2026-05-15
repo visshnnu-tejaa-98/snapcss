@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(xargs cat)",
+      "Bash(chmod +x /tmp/snap_rename.sh)",
+      "Bash(bash /tmp/snap_rename.sh)",
+      "Bash(bash /tmp/fix_plan.sh)",
+      "Bash(npm run *)",
+      "Bash(node playground/server.js)",
+      "Bash(curl -s http://localhost:4000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4000/dist/index.mjs)",
+      "Bash(kill %1)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(pkill -f \"vite.*5173\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(curl -s http://localhost:5174)",
+      "Bash(npm test *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

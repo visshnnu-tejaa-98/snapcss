@@ -1,0 +1,23 @@
+# Source
+packages/
+tests/
+docs-site/
+playground/
+
+# Config
+tsup.config.ts
+tsconfig*.json
+.eslintrc*
+.prettierrc*
+vitest.config*
+
+# Dev artifacts
+*.map
+*.tsbuildinfo
+
+# Misc
+.git/
+.github/
+node_modules/
+todoItems.md
+CHANGELOG.md
