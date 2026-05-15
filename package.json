@@ -1,5 +1,5 @@
 {
-  "name": "snapcss",
+  "name": "@visshnnu-tejaa/snapcss",
   "version": "1.0.0",
   "description": "A lightweight utility-first runtime CSS engine",
   "main": "./dist/index.js",
