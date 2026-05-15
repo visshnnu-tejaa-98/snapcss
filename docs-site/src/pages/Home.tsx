@@ -575,7 +575,7 @@ function BigCTA() {
         <p className="hp-bigcta-p">Drop snapcss into any page and start shipping. The full source is &lt;500 lines — fork it, learn from it, make it yours.</p>
         <div className="hp-cta-row" style={{ justifyContent: 'center' }}>
           <Link className="hp-btn hp-btn-primary" to="/docs/installation">Install snapcss</Link>
-          <a className="hp-btn hp-btn-ghost" href="https://github.com" target="_blank" rel="noopener noreferrer">Read the source</a>
+          <a className="hp-btn hp-btn-ghost" href={import.meta.env.VITE_GITHUB_URL ?? 'https://github.com/visshnnu-tejaa-98/snapcss'} target="_blank" rel="noopener noreferrer">Read the source</a>
         </div>
       </div>
     </section>
@@ -594,7 +594,7 @@ function HomeFooter() {
               A tiny runtime utility-first CSS engine. Built to be readable, hackable, and to disappear into your stack.
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hp-social-btn">
+              <a href={import.meta.env.VITE_GITHUB_URL ?? 'https://github.com/visshnnu-tejaa-98/snapcss'} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hp-social-btn">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.69.08-.69 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.14 1.18.91-.25 1.89-.38 2.86-.39.97 0 1.95.13 2.86.39 2.18-1.49 3.14-1.18 3.14-1.18.62 1.59.23 2.76.11 3.05.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.07.78 2.15v3.18c0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/></svg>
               </a>
               <a href="https://npmjs.com/package/snapcss" target="_blank" rel="noopener noreferrer" aria-label="npm" className="hp-social-btn hp-social-npm">

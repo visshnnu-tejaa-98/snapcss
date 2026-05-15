@@ -18,6 +18,17 @@ vitest.config*
 # Misc
 .git/
 .github/
+.claude/
 node_modules/
 todoItems.md
 CHANGELOG.md
+
+# Environment files
+.env
+.env.example
+
+# Internal planning docs
+plan.md
+deploy.md
+prd.md
+run.md

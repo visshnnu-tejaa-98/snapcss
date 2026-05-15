@@ -48,11 +48,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/visshnnutejaa/snapcss.git"
+    "url": "https://github.com/visshnnu-tejaa-98/snapcss.git"
   },
-  "homepage": "https://snapcss.dev",
+  "homepage": "https://snapcss.in",
   "bugs": {
-    "url": "https://github.com/visshnnutejaa/snapcss/issues"
+    "url": "https://github.com/visshnnu-tejaa-98/snapcss/issues"
   },
   "dependencies": {
     "dotenv": "^17.4.2"
